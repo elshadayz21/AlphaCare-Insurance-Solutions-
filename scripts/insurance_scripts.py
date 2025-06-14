@@ -24,13 +24,13 @@ def find_missing_values(df):
         A summary of missing values, including the number of missing values per column.
     """
 
-    null_counts = df.isnull().sum()
+    null_counts = df.isnull().sum() #why not count? count counts all the values while sum only gets the null values 
     missing_value = null_counts
     percent_of_missing_value = 100 * null_counts / len(df)
     data_type=df.dtypes
-
-    missing_data_summary = pd.concat([missing_value, percent_of_missing_value,data_type], axis=1)
-    missing_data_summary_table = missing_data_summary.rename(columns={0:"Missing values", 1:"Percent of Total Values",2:"DataType" })
+ 
+    missing_data_summary = pd.concat([missing_value, percent_of_missing_value,data_type], axis=1) # 
+    missing_data_summary_table = missing_data_summary.rename(columns={0:"Missing values", 1:"Percent of Total Values",2:"DataType" }) #
     missing_data_summary_table = missing_data_summary_table[missing_data_summary_table.iloc[:, 1] != 0].sort_values('Percent of Total Values', ascending=False).round(1)
 
     print(f"From {df.shape[1]} columns selected, there are {missing_data_summary_table.shape[0]} columns with missing values.")
@@ -60,13 +60,13 @@ def replace_missing_values(data):
 
   # Replace missing values in categorical columns with the mode
   for column in categorical_columns:
-    column_mode = data[column].mode().iloc[0]
+    column_mode = data[column].mode().iloc[0] # mode() , returns value that happens most frequency , iloc for the 1st value with hightest frequency
     data[column] = data[column].fillna(column_mode)
 
   return data
 
 def histogramPlotForNumericalColumns(insurance_data):
-    for column in insurance_data.select_dtypes(include='number').columns:
+    for column in insurance_data.select_dtypes(include='number').columns: #
         print(insurance_data[column].value_counts())
         plt.figure(figsize=(20,6))
         plt.hist(insurance_data[column], bins=30)
@@ -91,7 +91,7 @@ def get_outlier_summary(data):
         Outlier summary DataFrame.
     """
 
-    outlier_summary = pd.DataFrame(columns=['Variable', 'Number of Outliers'])
+    outlier_summary = pd.DataFrame(columns=['Variable', 'Number of Outliers']) #outlier is 
     data = data.select_dtypes(include='number')
 
     for column_name in data.columns:
@@ -129,7 +129,7 @@ def remove_outliers_winsorization(xdr_data):
         iqr = q3 - q1
         lower_bound = q1 - 1.5 * iqr
         upper_bound = q3 + 1.5 * iqr
-        xdr_data[column_name] = xdr_data[column_name].clip(lower_bound, upper_bound)
+        xdr_data[column_name] = xdr_data[column_name].clip(lower_bound, upper_bound) # clip
 
     return xdr_data
 
@@ -139,7 +139,7 @@ def hypothesis_test_difference_between_columns(df, kpi_column, group_column):
    
     column_groups = [df[df[group_column] == group_code][kpi_column].dropna() for group_code in group_codes]
 
-    t_stat, p_value = stats.f_oneway(*column_groups)
+    t_stat, p_value = stats.f_oneway(*column_groups) #
     print(f"T-statistic of {group_column}: {t_stat}")
     print(f"P-value of {group_column}: {p_value}")
      # Interpret the results
